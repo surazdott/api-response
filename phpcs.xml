@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="API Response">
+    <rule ref="PSR2"/>
+
+    <file>src</file>
+    
+    <arg name="colors"/>
+    <arg value="p"/>
+    <arg value="s"/>
+</ruleset>
