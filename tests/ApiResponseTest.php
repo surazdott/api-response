@@ -178,4 +178,21 @@ final class ApiResponseTest extends TestCase
             'errors' => $errors,
         ], $response->getData(true));
     }
+
+    #[Test]
+    public function test_it_returns_a_server_error_response_when_using_response(): void
+    {
+        $message = 'Server error';
+        $status = 503;
+
+        $response = Api::response(message: $message, status: $status);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals($status, $response->status());
+
+        $this->assertEquals([
+            'success' => false,
+            'message' => $message,
+        ], $response->getData(true));
+    }
 }

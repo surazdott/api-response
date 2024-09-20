@@ -19,11 +19,18 @@ class ApiResponse
      */
     public function response(string $message, mixed $data = [], int $status = 200): JsonResponse
     {
-        return $this->toJson([
-            'success' => true,
+        $success = $status >= 200 && $status < 300;
+
+        $response = [
+            'success' => $success,
             'message' => $message,
-            'data' => $data,
-        ], $status);
+        ];
+
+        if (!empty($data)) {
+            $response['data'] = $data;
+        }
+
+        return $this->toJson($response, $status);
     }
 
     /**
