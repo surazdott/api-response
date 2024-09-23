@@ -15,11 +15,10 @@ final class ApiResponseTest extends TestCase
         $data = ['key' => 'value'];
         $status = 202;
 
-        $response = Api::response($message, $data, $status);
+        $response = Api::response($data, $message, $status);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals($status, $response->status());
-
         $this->assertEquals([
             'success' => true,
             'message' => $message,
@@ -33,11 +32,10 @@ final class ApiResponseTest extends TestCase
         $message = 'Operation successful';
         $data = ['key' => 'value'];
 
-        $response = Api::success($message, $data);
+        $response = Api::success($data, $message);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->status());
-
         $this->assertEquals([
             'success' => true,
             'message' => $message,
@@ -51,11 +49,10 @@ final class ApiResponseTest extends TestCase
         $message = 'Resource created';
         $data = ['id' => 1];
 
-        $response = Api::created($message, $data);
+        $response = Api::created($data, $message);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(201, $response->status());
-
         $this->assertEquals([
             'success' => true,
             'message' => $message,
@@ -69,11 +66,10 @@ final class ApiResponseTest extends TestCase
         $message = 'Validation failed';
         $errors = ['field' => 'error'];
 
-        $response = Api::validation($message, $errors);
+        $response = Api::validation($errors, $message);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(400, $response->status());
-
+        $this->assertEquals(422, $response->status());
         $this->assertEquals([
             'success' => false,
             'message' => $message,
@@ -90,7 +86,6 @@ final class ApiResponseTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(401, $response->status());
-
         $this->assertEquals([
             'success' => false,
             'message' => $message,
@@ -106,7 +101,6 @@ final class ApiResponseTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(403, $response->status());
-
         $this->assertEquals([
             'success' => false,
             'message' => $message,
@@ -122,7 +116,6 @@ final class ApiResponseTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(404, $response->status());
-
         $this->assertEquals([
             'success' => false,
             'message' => $message,
@@ -138,7 +131,6 @@ final class ApiResponseTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(405, $response->status());
-
         $this->assertEquals([
             'success' => false,
             'message' => $message,
@@ -149,12 +141,12 @@ final class ApiResponseTest extends TestCase
     public function test_it_returns_a_server_error_response(): void
     {
         $message = 'Server error';
+        $status = 500;
 
-        $response = Api::serverError($message);
+        $response = Api::error($message, $status);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(500, $response->status());
-
         $this->assertEquals([
             'success' => false,
             'message' => $message,
@@ -162,16 +154,15 @@ final class ApiResponseTest extends TestCase
     }
 
     #[Test]
-    public function test_it_returns_an_error_response(): void
+    public function test_it_returns_an_unprocessable_response(): void
     {
-        $message = 'Something went wrong';
+        $message = 'Unprocessable';
         $errors = ['error' => 'details'];
 
-        $response = Api::error($message, $errors);
+        $response = Api::unprocessable($errors, $message);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(400, $response->status());
-
+        $this->assertEquals(422, $response->status());
         $this->assertEquals([
             'success' => false,
             'message' => $message,
@@ -185,11 +176,10 @@ final class ApiResponseTest extends TestCase
         $message = 'Server error';
         $status = 503;
 
-        $response = Api::response(message: $message, status: $status);
+        $response = Api::response([], $message, $status);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals($status, $response->status());
-
         $this->assertEquals([
             'success' => false,
             'message' => $message,

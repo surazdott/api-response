@@ -12,9 +12,7 @@ class ApiResponseServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind('api', function () {
-            return new ApiResponse;
-        });
+        $this->registerFacades();
     }
 
     /**
@@ -23,6 +21,17 @@ class ApiResponseServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerHelpers();
+        $this->setupTranslations();
+    }
+
+    /**
+     * Register facades.
+     */
+    public function registerFacades(): void
+    {
+        $this->app->bind('api', function () {
+            return new ApiResponse;
+        });
     }
 
     /**
@@ -33,5 +42,17 @@ class ApiResponseServiceProvider extends ServiceProvider
         if (file_exists($helperFile = __DIR__.'/helpers.php')) {
             require_once $helperFile;
         }
+    }
+
+    /**
+     * Register transalations.
+     */
+    private function setupTranslations(): void
+    {
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'api-response');
+
+        $this->publishes([
+            __DIR__.'/../lang' => $this->app->langPath('vendor/api-response'),
+        ], 'api-response');
     }
 }
