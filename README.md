@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/surazdott/api-response/main/art/image.png" width="600" alt="Laravel API Response">
+    <img src="https://raw.githubusercontent.com/surazdott/api-response/main/art/example.png" width="600" alt="Laravel API Response">
     <p align="center"><a href="https://github.com/surazdott/api-response/actions"><img alt="GitHub Workflow Status (main)" src="https://img.shields.io/github/actions/workflow/status/surazdott/api-response/tests.yml?branch=main&label=tests&style=round-square"></a> <a href="https://packagist.org/packages/surazdott/api-response"><img alt="Latest Version" src="https://img.shields.io/packagist/v/surazdott/api-response"></a> <a href="https://packagist.org/packages/surazdott/api-response"><img alt="License" src="https://img.shields.io/github/license/surazdott/api-response"></a>
     </p>
 </p>
