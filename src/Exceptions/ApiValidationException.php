@@ -12,8 +12,8 @@ class ApiValidationException extends Exception
      * Create a new exception instance.
      */
     public function __construct(
-        protected mixed $errors,
-        string $message = null,
+        string $message,
+        protected mixed $errors
     ) {
         parent::__construct($message);
     }
@@ -23,12 +23,6 @@ class ApiValidationException extends Exception
      */
     public function render(Request $request): JsonResponse
     {
-        if (empty($this->message)) {
-            $message = __('api-response::api.validation');
-        } else {
-            $message = $this->message;
-        }
-
-        return api()->validation($this->errors, $message);
+        return api()->validation($this->message, $this->errors);
     }
 }

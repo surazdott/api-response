@@ -17,11 +17,11 @@ class ApiResponse
     /**
      * Create a new JSON response instance.
      */
-    public function response(mixed $data = [], ?string $message = null, int $status = 200): JsonResponse
+    public function response(string $message, mixed $data = [], int $status = 200): JsonResponse
     {
         $response = [
             'success' => $status >= 200 && $status < 300,
-            'message' => $message ?? __('api-response::api.success'),
+            'message' => $message,
         ];
 
         if (! empty($data)) {
@@ -34,35 +34,95 @@ class ApiResponse
     /**
      * Create a new JSON success response instance.
      */
-    public function success(mixed $data = [], ?string $message = null): JsonResponse
+    public function success(string $message, mixed $data = []): JsonResponse
     {
-        return $this->toJson([
+        $response = [
             'success' => true,
-            'message' => $message ? $message : __('api-response::api.success'),
-            'data' => $data,
-        ], 200);
+            'message' => $message,
+        ];
+
+        if (! empty($data)) {
+            $response['data'] = $data;
+        }
+
+        return $this->toJson($response, 200);
     }
 
     /**
      * Method to return a response for successful resource creation.
      */
-    public function created(mixed $data = [], ?string $message = null): JsonResponse
+    public function created(string $message, mixed $data = []): JsonResponse
     {
         return $this->toJson([
             'success' => true,
-            'message' => $message ? $message : __('api-response::api.created'),
+            'message' => $message,
             'data' => $data,
         ], 201);
     }
 
     /**
-     * Method to return a validation response.
+     * Method to return a error response.
      */
-    public function validation(mixed $errors = [], ?string $message = null): JsonResponse
+    public function error(string $message, int $status = 400): JsonResponse
     {
         return $this->toJson([
             'success' => false,
-            'message' => $message ?? __('api-response::api.validation'),
+            'message' => $message,
+        ], $status);
+    }
+
+    /**
+     * Method to return an unauthorized response.
+     */
+    public function unauthorized(string $message): JsonResponse
+    {
+        return $this->toJson([
+            'success' => false,
+            'message' => $message,
+        ], 401);
+    }
+
+    /**
+     * Method to return a forbidden response.
+     */
+    public function forbidden(string $message): JsonResponse
+    {
+        return $this->toJson([
+            'success' => false,
+            'message' => $message,
+        ], 403);
+    }
+
+    /**
+     * Method to return a not found response.
+     */
+    public function notFound(string $message): JsonResponse
+    {
+        return $this->toJson([
+            'success' => false,
+            'message' => $message,
+        ], 404);
+    }
+
+    /**
+     * Method to return a method not allowed response.
+     */
+    public function notAllowed(string $message): JsonResponse
+    {
+        return $this->toJson([
+            'success' => false,
+            'message' => $message,
+        ], 405);
+    }
+
+    /**
+     * Method to return a validation response.
+     */
+    public function validation(string $message, mixed $errors = []): JsonResponse
+    {
+        return $this->toJson([
+            'success' => false,
+            'message' => $message,
             'errors' => $errors,
         ], 422);
     }
@@ -70,67 +130,28 @@ class ApiResponse
     /**
      * Method to return a unprocessable response.
      */
-    public function unprocessable(mixed $errors = [], ?string $message = null): JsonResponse
+    public function unprocessable(string $message, mixed $errors = []): JsonResponse
     {
-        return $this->toJson([
+        $response = [
             'success' => false,
-            'message' => $message ?? __('api-response::api.unprocessable'),
-            'errors' => $errors,
-        ], 422);
+            'message' => $message,
+        ];
+
+        if (! empty($errors)) {
+            $response['errors'] = $errors;
+        }
+
+        return $this->toJson($response, 422);
     }
 
     /**
-     * Method to return an unauthorized response.
+     * Method to return a server error response.
      */
-    public function unauthorized(?string $message = null): JsonResponse
+    public function serverError(string $message, int $status = 500): JsonResponse
     {
         return $this->toJson([
             'success' => false,
-            'message' => $message ?? __('api-response::api.unauthorized'),
-        ], 401);
-    }
-
-    /**
-     * Method to return a forbidden response.
-     */
-    public function forbidden(?string $message = null): JsonResponse
-    {
-        return $this->toJson([
-            'success' => false,
-            'message' => $message ?? __('api-response::api.forbidden'),
-        ], 403);
-    }
-
-    /**
-     * Method to return a not found response.
-     */
-    public function notFound(?string $message = null): JsonResponse
-    {
-        return $this->toJson([
-            'success' => false,
-            'message' => $message ?? __('api-response::api.not_found'),
-        ], 404);
-    }
-
-    /**
-     * Method to return a method not allowed response.
-     */
-    public function notAllowed(?string $message = null): JsonResponse
-    {
-        return $this->toJson([
-            'success' => false,
-            'message' => $message ?? __('api-response::api.not_allowed'),
-        ], 405);
-    }
-
-    /**
-     * Method to return a error response.
-     */
-    public function error(?string $message = null, int $status = 400): JsonResponse
-    {
-        return $this->toJson([
-            'success' => false,
-            'message' => $message ?? __('api-response::api.error'),
+            'message' => $message,
         ], $status);
     }
 }

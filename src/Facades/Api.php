@@ -5,16 +5,17 @@ namespace SurazDott\ApiResponse\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Illuminate\Http\JsonResponse response(mixed $data = [], ?string $message, int $status = 200)
- * @method static \Illuminate\Http\JsonResponse success(mixed $data = [], ?string $message)
- * @method static \Illuminate\Http\JsonResponse created(mixed $data = [], ?string $message)
- * @method static \Illuminate\Http\JsonResponse validation(mixed $errors = [], ?string $message)
- * @method static \Illuminate\Http\JsonResponse unprocessable(mixed $errors = [], ?string $message)
- * @method static \Illuminate\Http\JsonResponse unauthorized(?string $message)
- * @method static \Illuminate\Http\JsonResponse forbidden(?string $message)
- * @method static \Illuminate\Http\JsonResponse notFound(?string $message)
- * @method static \Illuminate\Http\JsonResponse notAllowed(?string $message)
- * @method static \Illuminate\Http\JsonResponse error(?string $message = null, int $status = 500)
+ * @method static \Illuminate\Http\JsonResponse response(string $message, mixed $data = [], int $status = 200)
+ * @method static \Illuminate\Http\JsonResponse success(string $message, mixed $data = [])
+ * @method static \Illuminate\Http\JsonResponse created(string $message, mixed $data = [])
+ * @method static \Illuminate\Http\JsonResponse error(string $message, int $status = 400)
+ * @method static \Illuminate\Http\JsonResponse unauthorized(string $message)
+ * @method static \Illuminate\Http\JsonResponse forbidden(string $message)
+ * @method static \Illuminate\Http\JsonResponse notFound(string $message)
+ * @method static \Illuminate\Http\JsonResponse notAllowed(string $message)
+ * @method static \Illuminate\Http\JsonResponse validation(string $message, mixed $errors = [])
+ * @method static \Illuminate\Http\JsonResponse unprocessable(string $message, mixed $errors = [])
+ * @method static \Illuminate\Http\JsonResponse serverError(string $message, int $status = 500)
  *
  * @see \SurazDott\ApiResponse\Http\ApiResponse
  */

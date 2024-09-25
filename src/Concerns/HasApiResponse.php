@@ -16,7 +16,9 @@ trait HasApiResponse
     protected function failedValidation(Validator $validator): HttpResponseException
     {
         if ($this->expectsJson()) {
-            throw new HttpResponseException(Api::validation($validator->errors()));
+            throw new HttpResponseException(
+                Api::validation(__('api-response::api.validation'), $validator->errors())
+            );
         }
 
         parent::failedValidation($validator);
