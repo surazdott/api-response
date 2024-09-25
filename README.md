@@ -40,7 +40,7 @@ public function index()
 {
     $posts = Post::take(10)->get();
 
-    return Api::success($posts);
+    return Api::response('Data fetched successfully', $posts);
 }
 ```
 
@@ -53,7 +53,7 @@ public function index()
 {
     $posts = Post::take(10)->get();
 
-    return api()->response($posts);
+    return api()->response('Data fetched successfully', $posts);
 }
 ```
 
@@ -62,7 +62,7 @@ This is the result.
 ```bash
 {
     "success": true,
-    "message": "Request processed successfully.",
+    "message": "Data fetched successfully",
     "data": [
         {"title": "Post Title", ...}
     ]
@@ -74,10 +74,10 @@ This is the result.
 #### `response`
 Generates a generic JSON response with a customizable status code.
 
-`response(mixed $data = [], ?string $message, int $status = 200)`
+`response(string $message, mixed $data = [], int $status = 200)`
 
 ```php
-return api()->response($data = [], 'Operation completed successfully', $status = 200);
+return api()->response('Operation completed successfully', $data = [], $status = 200);
 
 // Result
 {
@@ -89,14 +89,14 @@ return api()->response($data = [], 'Operation completed successfully', $status =
 #### `success`
 Shortcut for a successful operation with HTTP status code 200.
 
-`success(mixed $data = [], ?string $message)`
+`success(string $message, mixed $data = [])`
 
 ```php
 public function index()
 {
     $users = User::take(2)->get();
 
-    return api()->success($users);
+    return api()->success('Request processed successfully.', $users);
 }
 
 // Result
@@ -119,20 +119,20 @@ public function index()
 #### `created`
 Returns a response indicating that a resource has been successfully created  with HTTP status code 201.
 
-`created(mixed $data = [], ?string $message)`
+`created(string $message, mixed $data = [])`
 
 ```php
 public function store()
 {
     $user = User::create(['name' => 'Suraj']);
 
-    return api()->created($user);
+    return api()->created('Resource created successfully', $user);
 }
 
 // Result
 {
     "success": true,
-    "message": "Resource created successfully.",
+    "message": "Resource created successfully",
     "data": [
         {
             "id": 1,
@@ -145,69 +145,65 @@ public function store()
 #### `error`
 Returns an error response with HTTP status code 4xx.
 
-`error(?string $message = null, int $status = 400)`
+`error(string $message, int $status = 400)`
 
 ```php
-public function index()
+public function foo()
 {
-    try {
-        $users = \App\Models\User::find($id); // Undefined $id
-    } catch (\Exception $e) {
-        return api()->error();
-    }
+    return api()->error('Bad request');
 }
 
 // Result
 {
     "success": false,
-    "message": "Invalid syntax for this request was provided."
+    "message": "Bad request"
 }
 ```
 
 #### `unauthorized`
 Returns an unauthorized response with HTTP status code 401.
 
-`unauthorized(?string $message)`
+`unauthorized(string $message)`
 
 ```php
 public function edit()
 {
     if ($user->isNotAdmin()) {
-        return api()->unauthorized();
+        return api()->unauthorized('Authentication is required to access this resource.');
     }
 }
 
 // Result 
 {
     "success": false,
-    "message": "Authentication is required to access this resource."
+    "message": "Authentication is required to access this resource"
 }
 ```
 
 #### `forbidden`
 Returns an unauthorized response with HTTP status code 401.
 
-`forbidden(?string $message)`
+`forbidden(string $message)`
 
 ```php
 public function edit()
 {
     if ($user->isNotAdmin()) {
-        return api()->unauthorized();
+        return api()->unauthorized('You do not have permission to access this resource.');
     }
 }
 
 // Result 
 {
     "success": false,
-    "message": "You do not have permission to access this resource."
+    "message": "You do not have permission to access this resource"
 }
 ```
 
 #### `notFound`
 Returns a not found response with HTTP status code 404.
 
-`notFound(?string $message)`
+`notFound(string $message)`
 
 ```php
 public function edit()
@@ -215,38 +211,38 @@ public function edit()
     $post = Post::find(1);
 
     if (! $post) {
-        return api()->notFound();
+        return api()->notFound('Requested resource could not be found');
     }
 }
 
 // Result
 {
     "success": false,
-    "message": "Requested resource could not be found."
+    "message": "Requested resource could not be found"
 }
 ```
 
 #### `notAllowed`
 Returns a method not allowed response with HTTP status code 405.
 
-`notAllowed(?string $message)`
+`notAllowed(string $message)`
 
 ```php
 Route::fallback(function() {
-    return api()->notAllowed();
+    return api()->notAllowed('Method type is not currently supported');
 });
 
 // Result
 {
     "success": false,
-    "message": "Method type is not currently supported."
+    "message": "Method type is not currently supporte."
 }
 ```
 
 #### `validation`
 Generates a response indicating validation errors with HTTP status code 400.
 
-`validation(mixed $errors = [], ?string $message)`
+`validation(string $message, mixed $errors = [])`
 
 ```php
 public function login()
@@ -257,14 +253,14 @@ public function login()
     ]);
 
     if ($validator->fails()) {
-        return api()->validation($validator->errors());
+        return api()->validation('Validation failed for the request.', $validator->errors());
     }
 }
 
 // Result 
 {
     "success": false,
-    "message": "Validation failed for the request.",
+    "message": "Validation failed for the request",
     "errors": {
         "password": [
             "The password field is required."
@@ -276,20 +272,42 @@ public function login()
 #### `unprocessable`
 Generates a unprocessable response with HTTP status code 422.
 
-`unprocessable(mixed $errors = [], ?string $message)`
+`unprocessable(string $message, mixed $errors = [])`
 
 ```php
-$errors = ['details' => 'Invalid request data'];
+$errors = ['details' => 'Server was unable to process the request'];
 
 return api()->unprocessable($errors);
 
 // Result 
 {
     "success": false,
-    "message": "Server was unable to process the request.",
+    "message": "Server was unable to process the request",
     "errors": {
         "details": "Invalid request data"
     }
+}
+```
+
+#### `serverError`
+Returns an error response with HTTP status code 4xx.
+
+`serverError(string $message, int $status = 500)`
+
+```php
+public function index()
+{
+    try {
+        $users = \App\Models\User::find($id); // Undefined $id
+    } catch (\Exception $e) {
+        return api()->error('Invalid syntax for this request was provided');
+    }
+}
+
+// Result
+{
+    "success": false,
+    "message": "Invalid syntax for this request was provided"
 }
 ```
 
@@ -336,7 +354,7 @@ class UserStoreRequest extends FormRequest
 // Result
 {
     "success": false,
-    "message": "Validation failed for the request.",
+    "message": "Validation failed for the request",
     "errors": {
         "name": [
             "The name field is required."
@@ -356,14 +374,14 @@ use SurazDott\ApiResponse\Exceptions\ApiResponseException;
 public function login(Request $request)
 {
     if ($user->isNotAdmin()) {
-        throw new ApiResponseException('User must be an admin.', 400);
+        throw new ApiResponseException('User must be an admin', 403);
     }
 }
 
 // Result
 {
     "success": false,
-    "message": "User must be an admin."
+    "message": "User must be an admin"
 }
 ```
 
@@ -379,14 +397,14 @@ public function validation(Request $request)
     ]);
 
     if ($validator->fails()) {
-        throw new ApiValidationException($validator->errors());
+        throw new ApiValidationException('Validation failed for the request', $validator->errors());
     }
 }
 
 // Result
 {
     "success": false,
-    "message": "Validation failed for the request.",
+    "message": "Validation failed for the request",
     "errors": {
         "email": [
             "The email field is required."

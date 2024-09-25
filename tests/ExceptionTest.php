@@ -36,7 +36,7 @@ final class ExceptionTest extends TestCase
         $errors = ['email' => 'Email is required'];
         $message = 'Validation failed';
 
-        $exception = new ApiValidationException($errors, $message);
+        $exception = new ApiValidationException($message, $errors);
         $request = new Request();
 
         $response = $exception->render($request);
