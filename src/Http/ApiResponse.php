@@ -3,6 +3,7 @@
 namespace SurazDott\ApiResponse\Http;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResponse
 {
@@ -44,6 +45,30 @@ class ApiResponse
         if (! empty($data)) {
             $response['data'] = $data;
         }
+
+        return $this->toJson($response, 200);
+    }
+
+    /**
+     * Create a new paginated JSON response instance.
+     */
+    public function paginate(string $message, mixed $data = []): JsonResponse
+    {
+        $response = [
+            'success' => true,
+            'message' => $message,
+        ];
+
+        $resource = $data;
+
+        if ($resource instanceof JsonResource) {
+            $response['total'] = $data->total();
+            $response['total_pages'] = $data->lastPage();
+            $response['per_page'] = $data->perPage();
+            $response['data'] = $data;
+        }
+
+        $response['data'] = $data;
 
         return $this->toJson($response, 200);
     }

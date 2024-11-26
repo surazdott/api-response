@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static \Illuminate\Http\JsonResponse response(string $message, mixed $data = [], int $status = 200)
  * @method static \Illuminate\Http\JsonResponse success(string $message, mixed $data = [])
+ * @method static \Illuminate\Http\JsonResponse paginate(string $message, mixed $data = [])
  * @method static \Illuminate\Http\JsonResponse created(string $message, mixed $data = [])
  * @method static \Illuminate\Http\JsonResponse error(string $message, int $status = 400)
  * @method static \Illuminate\Http\JsonResponse unauthorized(string $message)

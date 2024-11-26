@@ -3,6 +3,8 @@
 namespace Tests;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Pagination\LengthAwarePaginator;
 use PHPUnit\Framework\Attributes\Test;
 use SurazDott\ApiResponse\Facades\Api;
 
@@ -41,6 +43,36 @@ final class ApiResponseTest extends TestCase
             'message' => $message,
             'data' => $data,
         ], $response->getData(true));
+    }
+
+    #[Test]
+    public function test_it_returns_a_paginated_response(): void
+    {
+        $message = 'Paginated response';
+
+        $data = new JsonResource(new LengthAwarePaginator(
+            ['item1', 'item2'], // Items
+            100, // Total records
+            10, // Per page
+            1, // Current page
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        ));
+
+        $response = Api::paginate($message, $data);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(200, $response->status());
+
+        $responseData = $response->getData(true);
+
+        $this->assertEquals([
+            'success' => true,
+            'message' => $message,
+            'total' => $responseData['total'],
+            'total_pages' => $responseData['total_pages'],
+            'per_page' => $responseData['per_page'],
+            'data' => $responseData['data'],
+        ], $responseData);
     }
 
     #[Test]

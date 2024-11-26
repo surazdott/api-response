@@ -86,8 +86,9 @@ return api()->response('Operation completed successfully', $data = [], $status =
     "data": []
 }
 ```
+
 #### `success`
-Shortcut for a successful operation with HTTP status code 200.
+Method for a successful operation with HTTP status code 200.
 
 `success(string $message, mixed $data = [])`
 
@@ -103,6 +104,39 @@ public function index()
 {
     "success": true,
     "message": "Request processed successfully.",
+    "data": [
+        {
+            "id": 1",
+            "name": "Suraj....",
+        },
+        {
+            "id": 2",
+            "name": "Rabin....",
+        }
+    ]
+}
+```
+
+#### `paginate`
+Return for a successful operation with HTTP paginated data.
+
+`paginate(string $message, mixed $data = [])`
+
+```php
+public function index()
+{
+    $users = UserResource::collection(User::active()->paginate(10));
+
+    return api()->success('Data fetched successfully.', $users);
+}
+
+// Result
+{
+    "success": true,
+    "message": "Request processed successfully.",
+    "total": 20,
+    "total_pages": 2,
+    "per_page": 10,
     "data": [
         {
             "id": 1",
