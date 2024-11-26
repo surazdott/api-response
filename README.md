@@ -303,26 +303,6 @@ public function login()
 }
 ```
 
-#### `unprocessable`
-Generates a unprocessable response with HTTP status code 422.
-
-`unprocessable(string $message, mixed $errors = [])`
-
-```php
-$errors = ['details' => 'Server was unable to process the request'];
-
-return api()->unprocessable($errors);
-
-// Result 
-{
-    "success": false,
-    "message": "Server was unable to process the request",
-    "errors": {
-        "details": "Invalid request data"
-    }
-}
-```
-
 #### `serverError`
 Returns an error response with HTTP status code 4xx.
 

@@ -186,23 +186,6 @@ final class ApiResponseTest extends TestCase
     }
 
     #[Test]
-    public function test_it_returns_an_unprocessable_response(): void
-    {
-        $message = 'Unprocessable';
-        $errors = ['error' => 'details'];
-
-        $response = Api::unprocessable($message, $errors);
-
-        $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(422, $response->status());
-        $this->assertEquals([
-            'success' => false,
-            'message' => $message,
-            'errors' => $errors,
-        ], $response->getData(true));
-    }
-
-    #[Test]
     public function test_it_returns_a_server_error_response(): void
     {
         $message = 'Server error';
@@ -231,6 +214,7 @@ final class ApiResponseTest extends TestCase
         $this->assertEquals([
             'success' => false,
             'message' => $message,
+            'data' => [],
         ], $response->getData(true));
     }
 }
