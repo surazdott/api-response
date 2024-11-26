@@ -23,11 +23,8 @@ class ApiResponse
         $response = [
             'success' => $status >= 200 && $status < 300,
             'message' => $message,
+            'data' => $data
         ];
-
-        if (! empty($data)) {
-            $response['data'] = $data;
-        }
 
         return $this->toJson($response, $status);
     }
@@ -40,11 +37,8 @@ class ApiResponse
         $response = [
             'success' => true,
             'message' => $message,
+            'data' => $data,
         ];
-
-        if (! empty($data)) {
-            $response['data'] = $data;
-        }
 
         return $this->toJson($response, 200);
     }
@@ -88,12 +82,18 @@ class ApiResponse
     /**
      * Method to return a error response.
      */
-    public function error(string $message, int $status = 400): JsonResponse
+    public function error(string $message, int $status = 400, mixed $errors = []): JsonResponse
     {
-        return $this->toJson([
+        $response = [
             'success' => false,
             'message' => $message,
-        ], $status);
+        ];
+
+        if (! empty($errors)) {
+            $response['errors'] = $errors;
+        }
+
+        return $this->toJson($response, $status);
     }
 
     /**
@@ -150,23 +150,6 @@ class ApiResponse
             'message' => $message,
             'errors' => $errors,
         ], 422);
-    }
-
-    /**
-     * Method to return a unprocessable response.
-     */
-    public function unprocessable(string $message, mixed $errors = []): JsonResponse
-    {
-        $response = [
-            'success' => false,
-            'message' => $message,
-        ];
-
-        if (! empty($errors)) {
-            $response['errors'] = $errors;
-        }
-
-        return $this->toJson($response, 422);
     }
 
     /**
