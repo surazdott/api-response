@@ -68,10 +68,19 @@ final class ApiResponseTest extends TestCase
         $this->assertEquals([
             'success' => true,
             'message' => $message,
-            'total' => $responseData['total'],
-            'total_pages' => $responseData['total_pages'],
-            'per_page' => $responseData['per_page'],
             'data' => $responseData['data'],
+            'links' => [
+                'first' => $responseData['links']['first'],
+                'last' => $responseData['links']['last'],
+                'prev' => $responseData['links']['prev'],
+                'next' => $responseData['links']['next'],
+            ],
+            'meta' => [
+                'total' => $responseData['meta']['total'],
+                'current_page' => $responseData['meta']['current_page'],
+                'total_pages' => $responseData['meta']['total_pages'],
+                'per_page' => $responseData['meta']['per_page'],
+            ],
         ], $responseData);
     }
 

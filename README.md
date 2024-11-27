@@ -127,16 +127,13 @@ public function index()
 {
     $users = UserResource::collection(User::active()->paginate(10));
 
-    return api()->success('Data fetched successfully.', $users);
+    return api()->paginate('Data fetched successfully.', $users);
 }
 
 // Result
 {
     "success": true,
-    "message": "Request processed successfully.",
-    "total": 20,
-    "total_pages": 2,
-    "per_page": 10,
+    "message": "Data fetched successfully.",
     "data": [
         {
             "id": 1",
@@ -146,7 +143,19 @@ public function index()
             "id": 2",
             "name": "Rabin....",
         }
-    ]
+    ],
+    "links": {
+        "first": "http://example.com/api/v1/users?page=1",
+        "last": "http://example.com/api/v1/users?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "total": 0,
+        "current_page": 1,
+        "total_pages": 1,
+        "per_page": 10
+    }
 }
 ```
 
