@@ -51,18 +51,26 @@ class ApiResponse
         $response = [
             'success' => true,
             'message' => $message,
+            'data' => $data,
         ];
 
         $resource = $data;
 
         if ($resource instanceof JsonResource) {
-            $response['total'] = $data->total();
-            $response['total_pages'] = $data->lastPage();
-            $response['per_page'] = $data->perPage();
-            $response['data'] = $data;
-        }
+            $response['links'] = [
+                'first' => $data->url(1),
+                'last' => $data->url($data->lastPage()),
+                'prev' => $data->previousPageUrl(),
+                'next' => $data->nextPageUrl(),
+            ];
 
-        $response['data'] = $data;
+            $response['meta'] = [
+                'total' => $data->total(),
+                'current_page' => $data->currentPage(),
+                'total_pages' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+            ];
+        }
 
         return $this->toJson($response, 200);
     }
