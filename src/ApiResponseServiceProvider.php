@@ -2,7 +2,9 @@
 
 namespace SurazDott\ApiResponse;
 
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\ServiceProvider;
+use SurazDott\ApiResponse\Exceptions\Handler as ApiExceptionHandler;
 use SurazDott\ApiResponse\Http\ApiResponse;
 
 class ApiResponseServiceProvider extends ServiceProvider
@@ -13,6 +15,7 @@ class ApiResponseServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerFacades();
+        $this->app->singleton(ExceptionHandler::class, ApiExceptionHandler::class);
     }
 
     /**
